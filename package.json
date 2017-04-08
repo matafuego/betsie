@@ -1,0 +1,29 @@
+{
+  "name": "betsie",
+  "version": "1.0.0",
+  "description": "armate un betsie del mundial",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matafuego/betsie.git"
+  },
+  "author": "matafuego",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matafuego/betsie/issues"
+  },
+  "homepage": "https://github.com/matafuego/betsie#readme",
+  "dependencies": {
+    "browserify": "^14.3.0",
+    "express": "^4.15.2",
+    "guid": "0.0.12",
+    "gulp": "^3.9.1",
+    "react": "^15.5.3",
+    "react-dom": "^15.5.3",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
