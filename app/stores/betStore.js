@@ -1,38 +1,39 @@
 var dispatcher = require("../dispatcher");
+var betService = require("../services/betService");
 
 function BetStore() {
     var listeners = [];
-    var bets = [{ name: "Jaguares-Sharks", tagline:"una apuesta perdida" }, 
-                    { name: "Jaguares-Lions",tagline:"¿una apuesta futura?" }, 
-                    { name: "Jaguares-Sunwolves", tagline:"una apuesta japonesa" }];
-
-    function getBets() {
-        return bets;
-    }
 
     function onChange(listener) {
+        getBets(listener);
         listeners.push(listener);
     }
 
+    function getBets(cb) {
+        betService.getBets().then(function (res) {
+            cb(res);
+        });
+    }
+
     function addBet(bet) {
-        bets.push(bet)
-        triggerListeners();
+        betService.addBet(bet).then(function (res) {
+            console.log(res);
+            triggerListeners();
+        });
     }
 
     function deleteBet(bet) {
-        var _index;
-        bets.map(function (s, index) {
-            if (s.name === bet.name) {
-                _index = index;
-            }
+        betService.deleteBet(bet).then(function (res) {
+            console.log(res);
+            triggerListeners();
         });
-        bets.splice(_index, 1);
-        triggerListeners();
     }
 
     function triggerListeners() {
-        listeners.forEach(function (listener) {
-            listener(bets);
+        getBets(function (res) {
+            listeners.forEach(function (listener) {
+                listener(res);
+            });
         });
     }
 
