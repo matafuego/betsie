@@ -1,0 +1,4 @@
+{
+  "dbUri": "mongodb://localhost/betsie_01",
+  "jwtSecret": "supercalifragilisticoespialidoso"
+}
