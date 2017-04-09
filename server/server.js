@@ -13,8 +13,8 @@ app.use(express.static(path.join(__dirname,"../app/dist")));
 app.use(bodyParser.json())
 app.use("/api", betController);
 
-app.listen(port,function(){
-    console.log("Started listening on port", port);
+app.listen(port, function(){
+    console.log("Server is running on http://localhost:", port);
 })
 
 // Connect to mongodb database

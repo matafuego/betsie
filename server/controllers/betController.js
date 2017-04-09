@@ -15,12 +15,12 @@ function getBets(req, res) {
 }
 
 function addBet(req, res) {
-    var school = new Bet(_.extend({}, req.body));
-    school.save(function (err) {
+    var bet = new Bet(_.extend({}, req.body));
+    bet.save(function (err) {
         if (err)
             res.send(err);
         else
-            res.json(school);
+            res.json(bet);
     });
 }
 
