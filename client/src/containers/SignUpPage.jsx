@@ -48,45 +48,47 @@ class SignUpPage extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
 
-     // create a string for an HTTP body message
-    const name = encodeURIComponent(this.state.user.name);
-    const email = encodeURIComponent(this.state.user.email);
-    const password = encodeURIComponent(this.state.user.password);
-    const formData = `name=${name}&email=${email}&password=${password}`;
+    fetch('/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.user)
+    })
+      .then((response) => {
+        if (response.status >= 200 && response.status < 300) {
+          return response;
+        } else {
+          var error = new Error(response.statusText);
+          error.response = response;
+          throw error;
+        }
+      })
+      .then((response) => { return response.json() })
+      .then((json) => {
 
-    // create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('post', '/auth/signup');
-    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xhr.responseType = 'json';
-    xhr.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        // success
-
-        // change the component-container state
         this.setState({
           errors: {}
         });
 
         // set a message
-        localStorage.setItem('successMessage', xhr.response.message);
+        localStorage.setItem('successMessage', json.message);
 
         // make a redirect
         this.context.router.replace('/login');
-      } else {
-        // failure
+      })
+      .catch((error) => {
+        error.response.json().then((json) => {
+          const errors = json.errors ? json.errors : {};
+          errors.summary = json.message;
+          this.setState({
+            errors
+          });
 
-        const errors = xhr.response.errors ? xhr.response.errors : {};
-        errors.summary = xhr.response.message;
-
-        this.setState({
-          errors
         });
-      }
-    });
-    xhr.send(formData);
+      });
   }
-
 
   /**
    * Render the component.

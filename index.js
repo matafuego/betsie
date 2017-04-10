@@ -12,7 +12,7 @@ const app = express();
 app.use(express.static('./server/static/'));
 app.use(express.static('./client/dist/'));
 // tell the app to parse HTTP body messages
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // pass the passport middleware
 app.use(passport.initialize());
 
@@ -32,6 +32,9 @@ const apiRoutes = require('./server/routes/api');
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 
+app.get("/*", function (req, res) {
+  res.sendFile(__dirname + '/server/static/index.html')
+})
 
 // start the server
 app.listen(port, () => {
