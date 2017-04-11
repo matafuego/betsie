@@ -1,5 +1,5 @@
 import React from 'react';
-import Auth from '../modules/Auth';
+import Server from '../modules/Server';
 import Dashboard from '../components/Dashboard.jsx';
 
 
@@ -20,18 +20,11 @@ class DashboardPage extends React.Component {
    * This method will be executed after initial rendering.
    */
   componentDidMount() {
-    
-    fetch('/api/dashboard', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `bearer ${Auth.getToken()}`
-      }
-    })
-      .then((response) => { return response.json() })
-      .then((json) => {
+
+    Server.get('/api/dashboard')
+      .then((result) => {
         this.setState({
-          secretData: json.message
+          secretData: result.message
         });
       });
 

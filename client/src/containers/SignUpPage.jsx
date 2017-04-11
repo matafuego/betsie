@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import SignUpForm from '../components/SignUpForm.jsx';
+import Server from '../modules/Server';
 
 
 class SignUpPage extends React.Component {
@@ -39,6 +40,12 @@ class SignUpPage extends React.Component {
     });
   }
 
+  clearErrors() {
+    this.setState({
+      errors: {}
+    });
+  }
+
   /**
    * Process the form.
    *
@@ -48,32 +55,13 @@ class SignUpPage extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
 
-    fetch('/auth/signup', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.user)
-    })
+    Server.post('/auth/signup', this.state.user)
       .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          var error = new Error(response.statusText);
-          error.response = response;
-          throw error;
-        }
-      })
-      .then((response) => { return response.json() })
-      .then((json) => {
 
-        this.setState({
-          errors: {}
-        });
+        this.clearErrors();
 
         // set a message
-        localStorage.setItem('successMessage', json.message);
+        localStorage.setItem('successMessage', response.message);
 
         // make a redirect
         this.context.router.replace('/login');
@@ -89,6 +77,7 @@ class SignUpPage extends React.Component {
         });
       });
   }
+
 
   /**
    * Render the component.

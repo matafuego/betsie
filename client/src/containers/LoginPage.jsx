@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Auth from '../modules/Auth';
+import Server from '../modules/Server';
 import LoginForm from '../components/LoginForm.jsx';
 
 
@@ -24,6 +25,12 @@ class LoginPage extends React.Component {
     this.changeUser = this.changeUser.bind(this);
   }
 
+  clearErrors() {
+    this.setState({
+      errors: {}
+    });
+  }
+
   /**
    * Process the form.
    *
@@ -33,31 +40,13 @@ class LoginPage extends React.Component {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
 
-    fetch('/auth/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json, text/plain, */*',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.user)
-    })
+    Server.post('/auth/login', this.state.user)
       .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return response;
-        } else {
-          var error = new Error(response.statusText);
-          error.response = response;
-          throw error;
-        }
-      })
-      .then((response) => { return response.json() })
-      .then((json) => {
 
-        this.setState({
-          errors: {}
-        });
+        this.clearErrors();
 
-        Auth.authenticateUser(json.token);
+        Auth.authenticateUser(response.token);
+        
         // change the current URL to /
         this.context.router.replace('/');
       })

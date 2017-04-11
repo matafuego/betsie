@@ -4,7 +4,7 @@
   "description": "armate un betsie del mundial",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --use_strict index.js",
+    "start": "nodemon --use_strict index.js & webpack",
     "bundle": "webpack"
   },
   "repository": {
