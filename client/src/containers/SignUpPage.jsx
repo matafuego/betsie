@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 import SignUpForm from '../components/SignUpForm.jsx';
 import Server from '../modules/Server';
-
+import ErrorHandler from '../modules/ErrorHandler.js';
 
 class SignUpPage extends React.Component {
 
@@ -67,14 +67,11 @@ class SignUpPage extends React.Component {
         this.context.router.replace('/login');
       })
       .catch((error) => {
-        error.response.json().then((json) => {
-          const errors = json.errors ? json.errors : {};
-          errors.summary = json.message;
+        ErrorHandler.handle(error, (errors) => {
           this.setState({
-            errors
+            errors: errors
           });
-
-        });
+        })
       });
   }
 

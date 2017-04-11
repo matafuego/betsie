@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Auth from '../modules/Auth';
 import Server from '../modules/Server';
 import LoginForm from '../components/LoginForm.jsx';
+import ErrorHandler from '../modules/ErrorHandler.js';
 
 
 class LoginPage extends React.Component {
@@ -31,11 +32,6 @@ class LoginPage extends React.Component {
     });
   }
 
-  /**
-   * Process the form.
-   *
-   * @param {object} event - the JavaScript event object
-   */
   processForm(event) {
     // prevent default action. in this case, action is the form submission event
     event.preventDefault();
@@ -43,22 +39,20 @@ class LoginPage extends React.Component {
     Server.post('/auth/login', this.state.user)
       .then((response) => {
 
+        console.log(response);
         this.clearErrors();
 
         Auth.authenticateUser(response.token);
-        
+
         // change the current URL to /
         this.context.router.replace('/');
       })
       .catch((error) => {
-        error.response.json().then((json) => {
-          const errors = json.errors ? json.errors : {};
-          errors.summary = json.message;
+        ErrorHandler.handle(error, (errors) => {
           this.setState({
-            errors
+            errors: errors
           });
-
-        });
+        })
       });
   }
 
